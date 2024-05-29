@@ -1,0 +1,17 @@
+echo hamza
+echo hello
+ls -a
+ls -l
+ls
+clear
+echo child &
+myjobs
+ls &
+myjobs
+myjobs
+myhistory
+s
+myhistory
+noice
+echo "# exercise-2-3-implement-shell-hamzash10" >> README.md
+exit
