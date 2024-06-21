@@ -15,3 +15,10 @@ myhistory
 noice
 echo "# exercise-2-3-implement-shell-hamzash10" >> README.md
 exit
+hi 
+echo
+exit
+ls 
+ls -a
+ecit
+exit
