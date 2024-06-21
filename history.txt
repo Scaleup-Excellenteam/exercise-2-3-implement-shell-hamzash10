@@ -22,3 +22,6 @@ ls
 ls -a
 ecit
 exit
+cd
+echo testing
+exit
