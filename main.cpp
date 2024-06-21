@@ -15,6 +15,11 @@ const string MYJOBS="myjobs";
 const string MYHISTORY="myhistory";
 
 
+enum Status{
+    Running,
+    Finished
+};
+
 //splits the input into individual args
 vector<string> split(const string& input){
     vector<string> args;
@@ -67,10 +72,6 @@ string find_path(const string& command){
 }
 
 
-enum Status{
-    Running,
-    Finished
-};
 
 struct process{
     pid_t pid;
