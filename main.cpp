@@ -58,7 +58,7 @@ string find_path(const string& command){
                 return path;
         }
     }
-    return "null";
+    return "";
 }
 
 
@@ -160,7 +160,7 @@ int main() {
 
         // check if the command exist
         string path=find_path(command);
-        if(path == "null"){
+        if(path.empty()){
             cerr<<"command doesnt exist: "<<command<<endl;
             continue;
         }
