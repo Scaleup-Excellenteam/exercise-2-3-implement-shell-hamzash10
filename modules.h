@@ -11,6 +11,7 @@
 #include <sys/wait.h>
 #include <thread>
 #include <fstream>
+#include <fcntl.h>
 using namespace std;
 namespace fs = filesystem;
 const string EXIT="exit";

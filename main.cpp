@@ -12,25 +12,24 @@ int main() {
         cerr<<"ERROR couldn't open history file"<<endl;
     }
 
-
-    pwd();
-
-    // read the command line
-    getline(cin,input);
-    //add command to history
-    history_file<<input<<endl;
-    args=split(input);
-
-    bool background=false;
-    if(args.back() == "&"){
-        background=true;
-        args.pop_back();
-    }
-
-    command=args.front();
+    string input_file,output_file,append_file;
     bool is_custom_command=false;
-    while(command!=EXIT) {
+    pwd();
+    // read the command line
+    while(getline(cin,input)) {
+    
+        //add command to history
+        history_file<<input<<endl;
 
+        args=split(input,input_file,output_file,append_file);
+
+        bool background=false;
+        if(args.back() == "&"){
+            background=true;
+            args.pop_back();
+        }
+
+        command=args.front();
 
         if(command==MYJOBS) {
             for (const auto &proc: background_processes) {
@@ -50,8 +49,12 @@ int main() {
             history_file.open("history.txt",ios::app);
             is_custom_command=true;
         }
+       
+        if(command==EXIT){
+            break;
+        }
         
-        if(!is_custom_command){
+        if(!is_custom_command && !args.empty()){
             // check if the command exist
             string path=find_path(command);
             if(path.empty())
@@ -62,6 +65,53 @@ int main() {
 
                 //child process
                 if(pid==0){
+                    bool successfuly_opened_file = true;
+                    
+                    // handel input redirection
+                    if(!input_file.empty()){
+                        string empty_string="";
+                        ifstream file(input_file);
+                        if (!file.is_open()) {
+                            cerr << "Failed to open file: " << input_file << endl;
+                            return 1;
+                        }
+
+                        string line;
+                        while (getline(file, line)) { 
+                            auto line_content=split(line,empty_string,empty_string,empty_string);
+                            args.insert(args.end(),line_content.begin(),line_content.end());
+                            args.push_back("\n");
+                        }
+
+                        file.close(); // Close the file
+                    }
+                    // handel output redirection
+                    else if(!output_file.empty()){
+                        int fd = open(output_file.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                        if (fd == -1) {
+                            cerr << "Failed to open output file: " << output_file << endl;
+                            successfuly_opened_file = false;
+                        }
+                        dup2(fd, STDOUT_FILENO);
+                        close(fd);
+                    }
+                    // handel append redirection
+                    else if(!append_file.empty()){
+                        int fd = open(append_file.c_str(), O_WRONLY | O_CREAT | O_APPEND, 0644);
+                        if (fd == -1) {
+                            cerr << "Failed to open append file: " << append_file << endl;
+                            successfuly_opened_file = false;
+                        }
+                        dup2(fd, STDOUT_FILENO);
+                        close(fd);
+                    }
+
+                    if(!successfuly_opened_file){
+                        pwd();
+                        is_custom_command=false;
+                        continue;
+                    }
+
                     // Convert each string to const char* and add it to the vector
                     vector<const char*> string_to_const_char;
                     for (const string& str : args)
@@ -82,24 +132,9 @@ int main() {
             }
         }
 
-
-
         pwd();
-
-        // read the command line
-        getline(cin,input);
-        //add command to history
-        history_file<<input<<endl;
-        args=split(input);
-
-        bool background=false;
-        if(args.back() == "&"){
-            background=true;
-            args.pop_back();
-        }
-
-        command=args.front();
         is_custom_command=false;
+
     }
 
     history_file.close();

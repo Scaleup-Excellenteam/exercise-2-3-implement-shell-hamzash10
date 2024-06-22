@@ -2,10 +2,13 @@
 
 
 //splits the input into individual args
-vector<string> split(const string& input){
+vector<string> split(const string& input,string& input_file,string& output_file,string& append_file){
     vector<string> args;
     istringstream ss(input);
     string arg;
+    input_file = "";
+    output_file = "";
+    append_file = "";
     while(ss>>arg) {
         if(arg[0]=='$'){
             if(arg[1]=='{'){
@@ -21,7 +24,36 @@ vector<string> split(const string& input){
                 arg="Variable $"+arg+" doesn't exist";
 
         }
-
+        else if(arg=="<"){
+            if(ss>>arg)
+                input_file=arg;
+            else{
+                cerr << "Syntax error: Expected file after '<'\n";
+                args.clear();
+                return args;
+            }
+            continue;
+        }
+        else if(arg==">"){
+            if(ss>>arg)
+                output_file=arg;
+            else{
+                cerr << "Syntax error: Expected file after '>'\n";
+                args.clear();
+                return args;
+            }
+            continue;
+        }
+        else if(arg==">>"){
+            if(ss>>arg)
+                append_file=arg;
+            else{
+                cerr << "Syntax error: Expected file after '>>'\n";
+                args.clear();
+                return args;
+            }
+            continue;
+        }
         args.push_back(arg);
 
     }
