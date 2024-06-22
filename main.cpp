@@ -69,21 +69,30 @@ int main() {
                     
                     // handel input redirection
                     if(!input_file.empty()){
-                        string empty_string="";
-                        ifstream file(input_file);
-                        if (!file.is_open()) {
-                            cerr << "Failed to open file: " << input_file << endl;
-                            return 1;
-                        }
+                        // string empty_string="";
+                        // ifstream file(input_file);
+                        // if (!file.is_open()) {
+                        //     cerr << "Failed to open file: " << input_file << endl;
+                        //     return 1;
+                        // }
 
-                        string line;
-                        while (getline(file, line)) { 
-                            auto line_content=split(line,empty_string,empty_string,empty_string);
-                            args.insert(args.end(),line_content.begin(),line_content.end());
-                            args.push_back("\n");
-                        }
+                        // string line;
+                        // while (getline(file, line)) { 
+                        //     auto line_content=split(line,empty_string,empty_string,empty_string);
+                        //     args.insert(args.end(),line_content.begin(),line_content.end());
+                        //     args.push_back("\n");
+                        // }
 
-                        file.close(); // Close the file
+                        // file.close(); // Close the file
+                        int fd = open(input_file.c_str(), O_RDONLY);
+                        if (fd == -1) {
+                            cerr << "Failed to open input file: " << input_file << endl;
+                            successfuly_opened_file = false;
+                        }
+                        dup2(fd, STDIN_FILENO);
+                        close(fd);
+                        execlp(command.c_str(), command.c_str(), NULL);
+                        cerr << "Failed to execute command: " << command << endl;
                     }
                     // handel output redirection
                     else if(!output_file.empty()){
