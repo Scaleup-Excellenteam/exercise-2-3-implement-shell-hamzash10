@@ -152,3 +152,7 @@ int main() {
 
     return 0;
 }
+
+
+// Regular Pipe: connects two related processes via in-memory buffers, uses two files two read and write (alot like what i did)
+// Named Pipe: acts as a named file in the filesystem for asynchronous communication between unrelated processes.
