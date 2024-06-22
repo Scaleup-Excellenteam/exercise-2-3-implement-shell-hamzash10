@@ -17,7 +17,8 @@ namespace fs = filesystem;
 const string EXIT="exit";
 const string MYJOBS="myjobs";
 const string MYHISTORY="myhistory";
-
+const string PIPE1_FILE="pipe1.txt";
+const string PIPE2_FILE="pipe2.txt";
 
 enum Status{
     Running,
