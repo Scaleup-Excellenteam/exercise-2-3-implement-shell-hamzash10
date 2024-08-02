@@ -81,7 +81,7 @@ int main() {
 
             command=args.front();
             string line;
-            Command com = command_map.count(command) ? command_map[command] : UNKNOWN;
+            Command command = command_map.count(command) ? command_map[command] : UNKNOWN;
             switch (com)
             {
                 case MYJOBS:
